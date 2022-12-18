@@ -6,12 +6,7 @@
             <van-tabs v-model="activeName">
                 <van-tab title="列表模式" name="list">
                     <div>
-                        <netInfoCard></netInfoCard>
-                        <netInfoCard></netInfoCard>
-                        <netInfoCard></netInfoCard>
-                        <netInfoCard></netInfoCard>
-                        <netInfoCard></netInfoCard>
-
+                        <netInfoCard v-for=" net, index in netPointInfo" :key="index" :netPointInfo="net"></netInfoCard>
                     </div>
                 </van-tab>
                 <van-tab title="地图模式" name="map">
@@ -27,35 +22,60 @@
 <script>
 import netInfoCard from '@/components/netInfoCard'
 export default {
-    components:{
+    components: {
         netInfoCard,
     },
     data() {
         return {
             activeName: 'a',
-            address:''
+            address: '',
+            netPointInfo: [{
+                id: '00001',
+                name: '庆隆朝阳五方12',
+                province: '北京',
+                city: '北京',
+                county: '朝阳区',
+                phone: '16666666666',
+                tel: '0795-2398192124124',
+                category: ['不发货', '自提送货'],
+                code: '010101',
+                detailedAddress: '大红门万泽龙物流园西排121号'
+            }, {
+                id: '00001',
+                name: '庆隆朝阳五方13',
+                province: '北京',
+                city: '北京',
+                county: '朝阳区',
+                phone: '16666666666',
+                tel: '0795-2398192124124',
+                category: ['不发货', '自提送货'],
+                code: '010101',
+                detailedAddress: '大红门万泽龙物流园西排121号'
+            }]
         };
     },
-    created(){
+    created() {
         // console.log(this.$route.query.type);
-        if(this.$route.query.type == 'start'){
+        if (this.$route.query.type == 'start') {
             this.address = JSON.parse(localStorage.getItem('Saddress')).split('市')[0] + '市' || ''
-        }else{
+        } else {
             this.address = JSON.parse(localStorage.getItem('Caddress')).split('市')[0] + '市' || ''
         }
-        
+
     }
 }
 </script>
 
 <style lang="less" scoped>
-.wrap{
+.wrap {
     width: 375px;
     height: 100vh;
-    ::v-deep .van-tabs__wrap{
+
+    ::v-deep .van-tabs__wrap {
         height: 6vh;
     }
 }
+
 .map {
     width: 100%;
     height: 84vh;

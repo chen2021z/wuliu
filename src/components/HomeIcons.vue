@@ -25,7 +25,7 @@
                     运费时效
                 </span>
             </div>
-            <div class="item">
+            <div class="item" @click="$router.push('/track')">
                 <div class="circle" style="background:#d308f9">
                     <svg-icon name="genzong" color="#fff"></svg-icon>
                 </div>

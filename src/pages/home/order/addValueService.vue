@@ -35,20 +35,20 @@
 
             <!-- 投保价值 -->
             <van-field v-model="addValue" maxlength="8" type="number" label="投保价值" placeholder="0"
-                @focus="show1 = true" />
+                 />
             <!-- 代收货款 -->
             <van-field v-model="proxyMoney" maxlength="8" type="number" label="代收货款" placeholder="0"
-                @focus="show2 = true" />
+                />
         </div>
 
         <van-button type="danger" @click="submit">提交</van-button>
 
 
         <!-- 数字键盘 -->
-        <van-number-keyboard v-model="addValue" :show="show1" theme="custom" :extra-key="['00', '.']"
+        <!-- <van-number-keyboard v-model="addValue" :show="show1" theme="custom" :extra-key="['00', '.']"
             close-button-text="完成" @blur="show1 = false" @input="onInput" @delete="onDelete" />
         <van-number-keyboard v-model="proxyMoney" :show="show2" theme="custom" :extra-key="['00', '.']"
-            close-button-text="完成" @blur="show2 = false" @input="onInput" @delete="onDelete" />
+            close-button-text="完成" @blur="show2 = false" @input="onInput" @delete="onDelete" /> -->
     </div>
 </template>
 

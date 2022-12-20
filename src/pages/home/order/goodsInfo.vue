@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header><van-icon name="arrow-left" @click="$router.push('/order')" /> <span>新增订单</span></Header>
+        <Header><van-icon name="arrow-left" @click="$router.push('/order')" /> <span>货物信息</span></Header>
         <div class="goodsNames">
             <p>货物名称:</p>
             <div class="goodsNameList list">
@@ -61,13 +61,13 @@
             <p>重量体积：</p>
             <div class="weivol">
                 <!-- 件数 -->
-                <van-field v-model="num" maxlength="3" type="digit" label="件数" placeholder="0" @focus="show1 = true" />
+                <van-field v-model="num" maxlength="3" type="digit" label="件数" placeholder="0" />
                 <!-- 重量 -->
                 <van-field v-model="weight" maxlength="3" type="number" label="重量(公斤)" placeholder="0"
-                    @focus="show2 = true" />
+                     />
                 <!-- 体积 -->
                 <van-field v-model="volume" maxlength="3" type="number" label="体积(立方)" placeholder="0"
-                    @focus="show3 = true" />
+                    />
             </div>
         </div>
 
@@ -81,13 +81,14 @@
         <van-button type="danger" @click="submit">提交</van-button>
 
 
-        <!-- 数字键盘 -->
-        <van-number-keyboard v-model="num" :show="show1" theme="custom" :extra-key="['00', '.']" 
-        close-button-text="完成" @blur="show1 = false" @input="onInput" @delete="onDelete" />
+        <!-- 使用数字键盘关闭原生时input聚焦|消失了 -->
+        <!-- 数字键盘
+        <van-number-keyboard v-model="num" :show="show1" theme="custom" :extra-key="['00', '.']" close-button-text="完成"
+            @blur="show1 = false" @input="onInput" @delete="onDelete" />
         <van-number-keyboard v-model="weight" :show="show2" theme="custom" :extra-key="['00', '.']"
             close-button-text="完成" @blur="show2 = false" @input="onInput" @delete="onDelete" />
         <van-number-keyboard v-model="volume" :show="show3" theme="custom" :extra-key="['00', '.']"
-            close-button-text="完成" @blur="show3 = false" @input="onInput" @delete="onDelete" />
+            close-button-text="完成" @blur="show3 = false" @input="onInput" @delete="onDelete" /> -->
     </div>
 </template>
 
@@ -110,17 +111,17 @@ export default {
             value: ''
         }
     },
-    created(){
+    created() {
         this.initData()
     },
     methods: {
-        initData(){
+        initData() {
             this.nameActive = JSON.parse(localStorage.getItem('nameActive'))
             this.packActive = JSON.parse(localStorage.getItem('packActive'))
             this.num = JSON.parse(localStorage.getItem('num'))
-            this.weight = JSON.parse(localStorage.getItem('weight')) 
-            this.volume = JSON.parse(localStorage.getItem('volume')) 
-            this.remark = JSON.parse(localStorage.getItem('remark')) 
+            this.weight = JSON.parse(localStorage.getItem('weight'))
+            this.volume = JSON.parse(localStorage.getItem('volume'))
+            this.remark = JSON.parse(localStorage.getItem('remark'))
         },
         selectName(event) {
             this.nameActive = event.target.innerText;
@@ -158,6 +159,18 @@ export default {
         onDelete() {
             // Toast('删除');
         },
+        focusnum(e) {
+            // event.preventDefault()
+            document.activeElement.blur();
+            e.target.setAttribute('readonly', true);
+            setTimeout(() => {
+                e.target.removeAttribute('readonly');
+            }, 100);
+            this.show1 = true
+        },
+        // blurnum(){
+
+        // }
     }
 
 

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="wrap">
-            <Header><van-icon name="arrow-left" @click="$router.push('/order')" /> <span>{{ role }}</span></Header>
+            <Header><van-icon name="arrow-left" @click="$router.push('/order')" /> <span>地址簿编辑</span></Header>
             <van-search v-model="value" placeholder="输入城市、区县、姓名、电话号码搜索" />
 
             <van-address-list v-model="chosenAddressId" :list="list" default-tag-text="默认" @add="onAdd" @edit="onEdit"
@@ -25,7 +25,7 @@ export default {
             role: '',
             // 绑定搜索框的值
             value: '',
-            chosenAddressId: '1',
+            chosenAddressId: '2',
             list: [
                 {
                     id: '1',
@@ -39,25 +39,42 @@ export default {
                     name: '李四',
                     tel: '1310000000',
                     address: '江西省宜春市拱墅区莫干山路 50 号',
+                    isDefault: false,
                 }, {
                     id: '3',
                     name: '王五',
                     tel: '1310000000',
+                    isDefault: false,
                     address: '广东省东莞市拱墅区莫干山路 50 号',
                 }, {
                     id: '4',
                     name: '赵六',
                     tel: '1310000000',
+                    isDefault: false,
                     address: '湖南省长沙市拱墅区莫干山路 50 号',
                 }, {
                     id: '5',
                     name: '陈七',
                     tel: '1310000000',
+                    isDefault: false,
                     address: '浙江省杭州市拱墅区莫干山路 50 号',
                 },
             ],
             show: false,
             actions: [{ name: '编辑' }, { name: '删除' }, { name: '克隆' }],
+            // 点击编辑的卡片信息
+            editCard:{
+                id:'',
+                name:'',
+                province:'',
+                city:'',
+                county:'',
+                tel:'',
+                addressDetail:'',
+                isDefault:'false',
+                fullAddress:""
+
+            }
         }
     },
     created() {
@@ -74,6 +91,19 @@ export default {
             // Toast('新增地址');
         },
         onEdit(item, index) {
+            console.log(item);
+            const {id,name,tel,address,isDefault} = item
+            this.editCard.id = id
+            this.editCard.name = name
+            this.editCard.tel = tel
+            this.editCard.isDefault = isDefault
+            this.editCard.province = address.split('省')[0]+'省'
+            this.editCard.city = address.split('市')[0].split('省')[1] + '市'
+            this.editCard.county = address.split('区')[0].split('市')[1] + '区'
+            this.editCard.addressDetail = address.split('区')[1]
+            this.editCard.fullAddress = address
+
+
             this.show = true
             // Toast('编辑地址:' + index);
         },
@@ -83,6 +113,18 @@ export default {
         onSelectBtn(action, index) {
             // index 从0开始，依次为编辑、删除、克隆  action包含当前选项的name
             console.log(action, index);
+            if(action.name == '编辑'){
+                localStorage.setItem("Eid", JSON.stringify(this.editCard.id))
+            localStorage.setItem("Ename", JSON.stringify(this.editCard.name))
+            localStorage.setItem("Etel", JSON.stringify(this.editCard.tel))
+            // localStorage.setItem("Eprovince", JSON.stringify(this.editCard.province))
+            // localStorage.setItem("Ecity", JSON.stringify(this.editCard.city))
+            // localStorage.setItem("Ecounty", JSON.stringify(this.editCard.county))
+            localStorage.setItem("EaddressDetail", JSON.stringify(this.editCard.addressDetail))
+            localStorage.setItem("EfullAddress", JSON.stringify(this.editCard.fullAddress))
+            localStorage.setItem("EisDefault", JSON.stringify(this.editCard.isDefault))
+                this.$router.push({path:'/newAddress',query:{from:'receive'}})
+            }
         },
         // 选中某一地址
         clickItem(item, index) {

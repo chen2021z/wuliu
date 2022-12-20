@@ -1,6 +1,6 @@
 <template>
     <div>
-        <van-nav-bar title="登录" />
+        <van-nav-bar title="注册" />
 
         <van-form @submit="onSubmit">
             <van-field v-model="username" name="手机号" label="手机号" placeholder="手机号"
@@ -8,11 +8,11 @@
             <van-field v-model="password" type="password" name="密码" label="密码" placeholder="密码"
                 :rules="[{ required: true, message: '请填写密码' },{ validator:checkPassword, message: '密码长度应大于5位 小于15位' }]" />
             <div style="margin: 16px;">
-                <van-button round block type="info" native-type="submit">登录</van-button>
+                <van-button round block type="info" native-type="submit">注册</van-button>
             </div>
         </van-form>
 
-        <!-- <router-link to="/login">已有账号，去登录</router-link> -->
+        <router-link to="/login">已有账号，去登录</router-link>
     </div>
 </template>
 

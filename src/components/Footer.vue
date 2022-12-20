@@ -54,6 +54,7 @@ export default {
 
 <style lang="less" scoped>
 .van-tabbar{
+    // margin-top: 8vh;
     height: 8vh;
 }
 </style>

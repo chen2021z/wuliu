@@ -20,6 +20,6 @@ export default {
 <style>
 #app{
   background-color: var(--wrap);
-  padding-bottom: 8vh;
+  
 }
 </style>

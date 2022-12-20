@@ -45,7 +45,15 @@ export default {
 }
 </script>
 
+<style>
+#app{
+    margin-bottom: 8vh;
+}
+</style>
+
+
 <style lang="less" scoped>
+
 .my-swipe .van-swipe-item {
     color: #fff;
     font-size: 20px;

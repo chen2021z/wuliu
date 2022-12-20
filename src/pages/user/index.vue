@@ -12,8 +12,8 @@
         </div>
 
         <ul>
-            <li> <span><svg-icon name="address" ></svg-icon>地址簿</span> <van-icon name="arrow" /></li>
-            <li> <span><svg-icon name="order" ></svg-icon>订单跟踪</span> <van-icon name="arrow" /></li>
+            <li  @click="$router.push('/addressBook')"> <span><svg-icon name="address"></svg-icon>地址簿</span> <van-icon name="arrow" /></li>
+            <li @click="$router.push('/track')"> <span><svg-icon name="order" ></svg-icon>订单跟踪</span> <van-icon name="arrow" /></li>
             <li> <span><svg-icon name="transport" ></svg-icon>运单查询</span> <van-icon name="arrow" /></li>
             <li> <span><svg-icon name="preference" ></svg-icon>订单偏好</span> <van-icon name="arrow" /></li>
             <li> <span><svg-icon name="feedback" ></svg-icon>功能反馈</span> <van-icon name="arrow" /></li>
@@ -23,7 +23,7 @@
 
         </ul>
 
-        <div class="logout">
+        <div class="logout" @click="$router.push('/register')">
             退出当前账号
         </div>
 
@@ -46,7 +46,9 @@ export default {
 }
 </script>
 
+
 <style lang="less" scoped>
+
 .wrap{
     height: 667px;
 }

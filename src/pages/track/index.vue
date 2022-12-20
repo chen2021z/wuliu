@@ -1,9 +1,9 @@
 <template>
     <div>
         <Header>订单追踪</Header>
-        <van-tabs v-model="active">
+        <van-tabs v-model="active" line-width="20%">
             <van-tab title="全部">
-                <p>内容 1</p>
+                <OrderItem></OrderItem>
             </van-tab>
             <van-tab title="未受理">内容 2</van-tab>
             <van-tab title="已受理">内容 3</van-tab>
@@ -16,11 +16,11 @@
 
 <script>
 
-
+import OrderItem from './orderItem'
 export default {
     name: 'Track',
     components: {
-
+        OrderItem
     },
     data() {
         return {
@@ -30,6 +30,8 @@ export default {
 }
 </script>
 
-<style lang="less" scoped>
-
+<style>
+#app{
+    margin-bottom: 8vh;
+}
 </style>

@@ -33,7 +33,7 @@ export default {
         return {
             city: '',
             activeName: 'city',
-            show: false,
+            show: true,
             areaList,
             netPointInfo: [{
                 id: '00001',

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="box">
-            <p><span>订单编号:</span> {{ orderId }} <span>{{ status }}</span> </p>
+            <p><span>订单编号:</span> {{ order.orderId }} <span>{{ status }}</span> </p>
             <p><span>始发地:</span> {{ startPlace }}  </p>
             <p><span>目的地:</span> {{ endPlace }} </p>
             <p><span>收货人:</span> {{ collecter }}  </p>
@@ -14,6 +14,7 @@
 
 <script>
 export default {
+    props:["order"],
     data() {
         return {
             orderId: 'DD163290',
@@ -59,7 +60,7 @@ export default {
 <style lang="less" scoped>
 .box{
     margin-top: 5px;
-    background-color: #fff;
+    background-color: rgb(244, 244, 244);
     padding: 10px;
     p{
         font-size: 15px;

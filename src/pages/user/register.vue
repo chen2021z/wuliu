@@ -5,8 +5,10 @@
         <van-form @submit="onSubmit">
             <van-field v-model="username" name="手机号" label="手机号" placeholder="手机号"
                 :rules="[{ required: true, message: '请填写手机号' }, { validator, message: '请输入正确手机号' }]" />
+            <van-field v-model="nickname" name="昵称" label="昵称" placeholder="昵称"
+                :rules="[{ required: true, message: '请填写您的昵称' }]" />
             <van-field v-model="password" type="password" name="密码" label="密码" placeholder="密码"
-                :rules="[{ required: true, message: '请填写密码' },{ validator:checkPassword, message: '密码长度应大于5位 小于15位' }]" />
+                :rules="[{ required: true, message: '请填写密码' }, { validator: checkPassword, message: '密码长度应大于5位 小于15位' }]" />
             <div style="margin: 16px;">
                 <van-button round block type="info" native-type="submit">注册</van-button>
             </div>
@@ -22,16 +24,17 @@ export default {
         return {
             username: '',
             password: '',
+            nickname:''
         };
     },
     methods: {
         validator(val) {
             return /^1[3-9]\d{9}$/.test(val);
         },
-        checkPassword(val){
-            if(val.length>5 && val.length <15){
+        checkPassword(val) {
+            if (val.length > 5 && val.length < 15) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         },
@@ -43,10 +46,11 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.van-form{
-    background-color: #fff ;
+.van-form {
+    background-color: #fff;
 }
-a{
+
+a {
     font-size: 13px;
     float: right;
     margin-right: 15px;

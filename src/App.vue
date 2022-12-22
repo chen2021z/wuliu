@@ -22,4 +22,9 @@ export default {
   background-color: var(--wrap);
   
 }
+.divider {
+    width: 100%;
+    height: 1px;
+    background-color: rgb(243, 243, 243);
+}
 </style>

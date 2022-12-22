@@ -9,6 +9,8 @@
                 <p>12月11日，web实训计划正式开始</p>
             </div>
         </div>
+        <div class="divider"></div>
+
     </div>
 </template>
 

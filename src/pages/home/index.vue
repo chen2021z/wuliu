@@ -9,11 +9,12 @@
             <van-swipe-item class="item5"></van-swipe-item>
         </van-swipe>
         <HomeIcons></HomeIcons>
-
+        <div class="divider" style="height:8px"></div>
         <div class="mid">
             <span>实训动态</span>
             <span @click="$router.push('/news')">更多</span>
         </div>
+        <div class="divider"></div>
 
         <Condition></Condition>
         <Condition></Condition>

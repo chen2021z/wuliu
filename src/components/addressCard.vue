@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="card">
-            <p>{{card.myname}}{{card.phone_number}}</p>
-            <p>{{card.province}}{{card.city}}{{card.region}}{{card.detailed_address}}</p>
+            <p>{{card.myname}}{{card.phoneNumber}}</p>
+            <p>{{card.province}}{{card.city}}{{card.region}}{{card.detailedAddress}}</p>
         </div>
     </div>
 </template>

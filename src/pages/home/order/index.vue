@@ -2,7 +2,7 @@
     <div class="wrap">
         <Header><van-icon name="arrow-left" @click="$router.push('/home')" /> <span>新增订单</span></Header>
 
-        <div class="send" @click="$router.push({ name: 'receive', params: { role: '发货人' } })">
+        <div class="send" @click="$router.push({ name: 'receive', query: { role: '1' } })">
             <span>寄</span>
 
             <span class="con" v-if="sender.id == null">请填写发货人信息</span>
@@ -14,7 +14,9 @@
 
             <svg-icon name="person" className="person" color="#ccc"></svg-icon>
         </div>
-        <div class="collect" @click="$router.push({ name: 'receive', params: { role: '收件人' } })">
+        <div class="divider"></div>
+
+        <div class="collect" @click="$router.push({ name: 'receive', query: { role: '2' } })">
             <span>收</span>
 
             <span class="con" v-if="collecter.id == null">请填写收件人信息</span>
@@ -27,6 +29,7 @@
             <svg-icon name="person" className="person" color="#ccc"></svg-icon>
         </div>
 
+        <div class="divider" style="height:3px ;"></div>
 
         <ul>
             <li @click="$router.push({ name: 'network', query: { type: 'start' } })"> <span>出发网点</span>
@@ -35,18 +38,21 @@
 
                 <van-icon name="arrow" />
             </li>
+
+
             <li @click="$router.push({ name: 'network', query: { type: 'end' } })"> <span>到达网点</span>
-                <span v-if="startNetDot.id == null">请选择到达网点</span>
+                <span v-if="endNetDot.id == null">请选择到达网点</span>
                 <div v-else class="van-ellipsis endNetDotName">{{ endNetDot.name }}</div>
 
                 <van-icon name="arrow" />
             </li>
             <li @click="$router.push('/goodsInfo')"> <span>货物信息</span> <span>请选择货物信息</span><van-icon name="arrow" />
             </li>
+
             <li @click="$router.push('/addValueService')"> <span>增值服务</span> <span>请选择增值服务</span><van-icon
                     name="arrow" /></li>
-            <li @click="show=true"> <span>付款方式</span> <span>{{paymentType}}</span><van-icon name="arrow" /></li>
-            <li class="lastli">
+            <li @click="show = true"> <span>付款方式</span> <span>{{ paymentType }}</span><van-icon name="arrow" /></li>
+            <li class="lastli  animate__animated " ref="check">
                 <van-checkbox v-model="checked" checked-color="#fc5531"></van-checkbox>
                 <p>
                     <span>我已阅读并同意</span>
@@ -62,16 +68,19 @@
         </div>
 
         <!-- 现付到付动作面板 -->
-        <van-action-sheet v-model="show" :actions="actions" cancel-text="取消" close-on-click-action @cancel="onCancel" @select="selectPayment" />
+        <van-action-sheet v-model="show" :actions="actions" cancel-text="取消" close-on-click-action @cancel="onCancel"
+            @select="selectPayment" />
     </div>
 </template>
 
 <script>
+import 'animate.css';
 import { Toast } from 'vant';
+import { addOrder } from '../../../api/order'
 export default {
     data() {
         return {
-            checked: true,
+            checked: false,
             sender: {
                 name: null,
                 tel: null,
@@ -92,10 +101,11 @@ export default {
                 name: null,
                 id: null
             },
-            paymentType:'现付',
+            paymentType: '现付',
             // 取消动作面板
             show: false,
             actions: [{ name: '现付' }, { name: '到付' }],
+            createTime: ''
         }
     },
     created() {
@@ -123,18 +133,62 @@ export default {
         onCancel() {
             Toast('取消');
         },
-        selectPayment(action,index){
-            console.log(action);
+        selectPayment(action, index) {
+            // console.log(action);
             this.paymentType = action.name
         },
-        submit(){
+        async submit() {
             // 发请求
+            if (this.checked) {
+                let orderData = {
+                    "sendId": this.sender.id,
+                    "collectId": this.collecter.id,
+                    "startnetdot": this.startNetDot.id,
+                    "endnetdot": this.endNetDot.id,
+                    "goodsNames": JSON.parse(localStorage.getItem('nameActive')),
+                    "goodsPack": JSON.parse(localStorage.getItem('packActive')),
+                    "num": JSON.parse(localStorage.getItem('num')),
+                    "weigth": JSON.parse(localStorage.getItem('weight')),
+                    "volume": JSON.parse(localStorage.getItem('volume')),
+                    "remark": JSON.parse(localStorage.getItem('remark')),
+                    "orderStatus": '未受理',
+                    "valueInsured": JSON.parse(localStorage.getItem('addValue')),
+                    "goodsPayment": JSON.parse(localStorage.getItem('proxyMoney')) ,
+                    "createOrderTime": "",
+                    "payment": this.paymentType
+                }
+                let res = await addOrder(orderData)
+                if(res.code==200){
+                    Toast.success('订单新增成功');
+                    this.$router.push('/track')
+                }else{
+                    Toast.fail('订单新增成功');
+                }
 
-            this.$router.push('/home')
+                // console.log(res);
+
+
+
+                // this.$router.push('/home')
+            } else {
+                this.$refs.check.classList.add('animate__headShake')
+                setTimeout(() => {
+                    this.$refs.check.classList.remove('animate__headShake')
+                }, 1500);
+
+            }
+
+
         }
     }
 }
 </script>
+
+<style>
+#app {
+    background-color: #fff !important;
+}
+</style>
 
 <style lang="less" scoped>
 .send,
@@ -195,7 +249,7 @@ export default {
 
 ul {
     width: 375px;
-    margin-top: 15px;
+    // margin-top: 15px;
 
     li {
         height: 50px;
@@ -203,7 +257,8 @@ ul {
         justify-content: space-around;
         align-items: center;
         background-color: rgb(255, 255, 255);
-        margin-bottom: 2px;
+        border-top: 0.5px solid rgb(234, 234, 234);
+        // margin-bottom: 2px;
         color: rgb(131, 131, 131);
         font-size: 16px;
 

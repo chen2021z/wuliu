@@ -6,15 +6,7 @@
             <div class=" list">
                 <!-- <router-link to="/home">111111111111</router-link> -->
                 <!-- 这里用事件委托不好 -->
-                <div @click="selectType" :class="{ active: typeActive == '自提' }">
-                    自提
-                </div>
-                <div @click="selectType" :class="{ active: typeActive == '提货上门' }">
-                    提货上门
-                </div>
-                <div @click="selectType" :class="{ active: typeActive == '送货上楼' }">
-                    送货上楼
-                </div>
+                <div v-for="type,index in types" :key="index" @click="selectType" :class="{ active: typeActive == type }">{{ type }}</div>
             </div>
         </div>
         <div class="proxyOrder">
@@ -22,15 +14,7 @@
             <div class=" list">
                 <!-- <router-link to="/home">111111111111</router-link> -->
                 <!-- 这里用事件委托不好 -->
-                <div @click="selectProxy" :class="{ active: proxyActive == '不签回单' }">
-                    不签回单
-                </div>
-                <div @click="selectProxy" :class="{ active: proxyActive == '原件返回' }">
-                    原件返回
-                </div>
-                <div @click="selectProxy" :class="{ active: proxyActive == '传真返回' }">
-                    传真返回
-                </div>
+                <div v-for="item,index in slips" :key="index" @click="selectProxy" :class="{ active: proxyActive == item }">{{ item }}</div>
             </div>
 
             <!-- 投保价值 -->
@@ -53,8 +37,8 @@
 </template>
 
 <script>
-import { json } from 'body-parser';
 import { Toast } from 'vant';
+import { getGoodsType, getGoodsReturnSlip } from '../../../api/goosInfo'
 export default {
     data() {
         return {
@@ -64,14 +48,20 @@ export default {
             proxyMoney: '',
             show1: false,
             show2: false,
-
+            types:[],
+            slips:[]
         }
     },
     created(){
         this.initData()
     },
     methods: {
-        initData(){
+        async initData(){
+            let res1 = await getGoodsType()
+            let res2 = await getGoodsReturnSlip()
+            res1.code==200? this.types=res1.data:''
+            res2.code==200? this.slips=res2.data:''
+
             this.typeActive = JSON.parse(localStorage.getItem('typeActive'))
             this.proxyActive = JSON.parse(localStorage.getItem('proxyActive'))
             this.addValue = JSON.parse(localStorage.getItem('addValue'))

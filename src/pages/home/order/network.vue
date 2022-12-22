@@ -20,6 +20,7 @@
 </template>
 
 <script>
+import { getNetList } from "@/api/network.js"
 import netInfoCard from '@/components/netInfoCard'
 export default {
     components: {
@@ -29,42 +30,44 @@ export default {
         return {
             activeName: 'a',
             address: '',
-            netPointInfo: [{
-                id: '00001',
-                name: '庆隆朝阳五方12',
-                province: '北京',
-                city: '北京',
-                county: '朝阳区',
-                phone: '16666666666',
-                tel: '0795-2398192124124',
-                category: ['不发货', '自提送货'],
-                code: '010101',
-                detailedAddress: '大红门万泽龙物流园西排121号'
-            }, {
-                id: '00001',
-                name: '庆隆朝阳五方13',
-                province: '北京',
-                city: '北京',
-                county: '朝阳区',
-                phone: '16666666666',
-                tel: '0795-2398192124124',
-                category: ['不发货', '自提送货'],
-                code: '010101',
-                detailedAddress: '大红门万泽龙物流园西排121号'
-            }]
+            netPointInfo: []
         };
     },
     created() {
         // console.log(this.$route.query.type);
-        if (this.$route.query.type == 'start') {
-            this.address = JSON.parse(localStorage.getItem('Saddress')).split('市')[0] + '市' || ''
-        } else {
-            this.address = JSON.parse(localStorage.getItem('Caddress')).split('市')[0] + '市' || ''
-        }
+        this.initData()
 
-    }
+    },
+    methods: {
+        async initData() {
+            if (this.$route.query.type == 'start') {
+                this.address = JSON.parse(localStorage.getItem('Scity'))
+            } else {
+                this.address = JSON.parse(localStorage.getItem('Ccity'))
+            }
+            let res = await getNetList(this.address)
+            console.log(res);
+            if (res.code == 200) {
+                this.netPointInfo = res.data.map(i => {
+                    return {
+                        id: i.websiteId,
+                        name: i.websiteName,
+                        province: i.websiteProvince,
+                        city: i.websiteCity,
+                        county: i.websiteRegion,
+                        phone: i.phone,
+                        tel: i.tel,
+                        category: ['不发货', '自提送货'],
+                        code: i.code,
+                        detailedAddress: i.detailedAddress
+                    }
+                })
+            }
+        }
+    },
 }
 </script>
+
 
 <style lang="less" scoped>
 .wrap {

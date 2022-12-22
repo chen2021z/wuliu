@@ -3,27 +3,42 @@
         <Header>个人中心</Header>
         <div class="info">
             <div class="photo">
-                <img src="../../assets/img/githubLOGO.jpg" alt="" width="100%">
+                <img v-if="userInfo.userId" :src="userInfo.avatar" alt="">
+                <img v-else src="../../assets/img/head.png" alt="" width="100%">
             </div>
             <div class="name">
-                <p>如约而至</p>
-                <p>19974077529</p>
+                <div v-if="userInfo.userId">
+                    <p>{{ userInfo.nickName }}</p>
+                    <p>{{ userInfo.userName }}</p>
+                </div>
+                <div v-else>
+                    <strong @click="$router.push('/login')">
+                        请登录
+                    </strong>
+                </div>
             </div>
         </div>
 
         <ul>
-            <li  @click="$router.push('/addressBook')"> <span><svg-icon name="address"></svg-icon>地址簿</span> <van-icon name="arrow" /></li>
-            <li @click="$router.push('/track')"> <span><svg-icon name="order" ></svg-icon>订单跟踪</span> <van-icon name="arrow" /></li>
-            <li> <span><svg-icon name="transport" ></svg-icon>运单查询</span> <van-icon name="arrow" /></li>
+            <li @click="$router.push('/addressBook')"> <span><svg-icon name="address"></svg-icon>地址簿</span> <van-icon
+                    name="arrow" /></li>
+            <div class="divider"></div>
+            <li @click="$router.push('/track')"> <span><svg-icon name="order"></svg-icon>订单跟踪</span> <van-icon
+                    name="arrow" /></li>
+            <div class="divider"></div>
+            <li @click="$router.push('/editInfo')"> <span><svg-icon name="myinfo"></svg-icon>个人信息</span> <van-icon
+                    name="arrow" /></li>
+            <div class="divider"></div>
+            <!-- <li> <span><svg-icon name="transport" ></svg-icon>运单查询</span> <van-icon name="arrow" /></li>
             <li> <span><svg-icon name="preference" ></svg-icon>订单偏好</span> <van-icon name="arrow" /></li>
             <li> <span><svg-icon name="feedback" ></svg-icon>功能反馈</span> <van-icon name="arrow" /></li>
             <li> <span><svg-icon name="service" ></svg-icon>联系客服</span> <van-icon name="arrow" /></li>
-            <li> <span><svg-icon name="help" ></svg-icon>使用帮助</span> <van-icon name="arrow" /></li>
+            <li> <span><svg-icon name="help" ></svg-icon>使用帮助</span> <van-icon name="arrow" /></li> -->
 
 
         </ul>
 
-        <div class="logout" @click="$router.push('/register')">
+        <div class="logout" @click="logout" v-if="userInfo.userId">
             退出当前账号
         </div>
 
@@ -31,16 +46,26 @@
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
 export default {
     name: 'User',
     components: {
     },
     data() {
         return {
-            info: {
-                src: ''
-            }
+
+        }
+    },
+    created() {
+
+    },
+    computed: {
+        ...mapState('user', ['userInfo'])
+    },
+    methods: {
+        logout() {
+            this.$store.dispatch('user/userLogout')
+            this.$router.push('/')
         }
     },
 }
@@ -48,10 +73,10 @@ export default {
 
 
 <style lang="less" scoped>
-
-.wrap{
+.wrap {
     height: 667px;
 }
+
 .info {
     width: 375px;
     height: 100px;
@@ -68,6 +93,11 @@ export default {
         border-radius: 50%;
         overflow: hidden;
         margin: 20px;
+        background-color: #fff;
+
+        img {
+            width: 100%;
+        }
     }
 
     .name {
@@ -75,6 +105,14 @@ export default {
         display: flex;
         flex-direction: column;
         justify-content: center;
+
+        strong {
+            font-size: 24px;
+        }
+
+        p:nth-child(1) {
+            font-size: 24px;
+        }
 
         p:nth-child(2) {
             font-size: 14px;
@@ -90,6 +128,7 @@ export default {
 
 ul {
     width: 375px;
+
     li {
         height: 50px;
         // line-height: 50px;
@@ -100,21 +139,25 @@ ul {
         margin-bottom: 2px;
         color: rgb(131, 131, 131);
         font-size: 16px;
-        .van-icon{
-            font-size: 20px ;
+
+        .van-icon {
+            font-size: 20px;
             margin-right: 15px;
         }
-        span{
+
+        span {
             display: flex;
             align-items: center;
-            .svg-icon{
+
+            .svg-icon {
                 font-size: 35px;
                 padding: 0 6px;
             }
         }
     }
 }
-.logout{
+
+.logout {
     margin: 10px auto;
     width: 350px;
     height: 40px;
@@ -122,7 +165,7 @@ ul {
     text-align: center;
     font-size: 20px;
     color: rgb(132, 132, 132);
-    background-color: rgb(255, 255, 255);
+    background-color: rgb(240, 240, 240);
     border-radius: 5px;
 
 

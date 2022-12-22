@@ -68,6 +68,10 @@ export default [
     name: 'addressBook',
     path: '/addressBook',
     component: () => import('@/pages/user/addressBook/index'),
+  },{
+    name: 'editInfo',
+    path: '/editInfo',
+    component: () => import('@/pages/user/EditInfo/index'),
   },
 
 

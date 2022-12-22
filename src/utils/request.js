@@ -7,8 +7,6 @@ import userToken from "@/store/user"
 
 // axios对象的方法create，创建一个axios实例
 const requests = axios.create({
-  // 基础路径，发请求是，路径中会带有api
-  baseURL : "/api",
   // 超时的时间
   timeout:5000,
 })

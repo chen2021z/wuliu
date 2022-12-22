@@ -6,7 +6,7 @@
             <van-address-edit :area-list="areaList" :address-info="addressInfo" show-delete show-set-default
                 show-search-result :search-result="searchResult" :area-columns-placeholder="['请选择', '请选择', '请选择']"
                 @save="onSave" @delete="onDelete" @change-detail="onChangeDetail" value="110101"
-                @confirm="selectAddress" @change-area="changeArea" />
+                @change-area="changeArea" />
         </div>
 
     </div>
@@ -15,7 +15,7 @@
 <script>
 import { areaList } from '@vant/area-data';
 import { Toast } from 'vant';
-
+import { updateAddress, addAddress } from "../../../api/address"
 export default {
     data() {
         return {
@@ -24,43 +24,86 @@ export default {
             cardInfo: {},
             addressInfo: {
                 id: '',
-                name: '张三',
+                name: '',
                 tel: '1',
-                province: { code: '120000', name: '天津市' },
-                city: { code: '120100', name: '天津市' },
-                county: { code: '120102', name: '河东区' },
+                province: '',
+                city: '',
+                county: '',
                 addressDetail: '',
-                isDefault: false
+                isDefault: false,
+                areaCode:''
             }
         };
     },
-    created() {
-        // console.log(this.$route.params.cardInfo);
-        // this.cardInfo = this.$route.params.cardInfo
-
-    },
     mounted() {
-        this.addressInfo.id = JSON.parse(localStorage.getItem('Eid')),
-            this.addressInfo.name = JSON.parse(localStorage.getItem('Ename')),
-            this.addressInfo.tel = JSON.parse(localStorage.getItem('Etel')),
-            this.addressInfo.province = JSON.parse(localStorage.getItem('Eprovince')),
-            this.addressInfo.city = JSON.parse(localStorage.getItem('Ecity')),
-            this.addressInfo.county = JSON.parse(localStorage.getItem('Ecounty')),
-            this.addressInfo.addressDetail = JSON.parse(localStorage.getItem('EaddressDetail')),
-            this.addressInfo.isDefault = JSON.parse(localStorage.getItem('EisDefault'))
+        this.initData()
     },
     methods: {
+        initData() {
+            this.addressInfo.id = JSON.parse(localStorage.getItem('Eid')),
+                this.addressInfo.name = JSON.parse(localStorage.getItem('Ename')),
+                this.addressInfo.tel = JSON.parse(localStorage.getItem('Etel')),
+                this.addressInfo.province = JSON.parse(localStorage.getItem('Eprovince')),
+                this.addressInfo.city = JSON.parse(localStorage.getItem('Ecity')),
+                this.addressInfo.county = JSON.parse(localStorage.getItem('Ecounty')),
+                this.addressInfo.addressDetail = JSON.parse(localStorage.getItem('EaddressDetail')),
+                this.addressInfo.areaCode = JSON.parse(localStorage.getItem('EareaCode')),
+                this.addressInfo.isDefault = JSON.parse(localStorage.getItem('EisDefault')) == 1 ? true : false
+        },
         routerBack() {
             if (this.$route.query.from == 'addressBook') {
                 this.$router.push('addressBook')
             } else {
-                this.$router.push('/receive')
+                this.$router.push({path:'/receive',query:{role:this.$route.query.collectOrsend}})
             }
 
         },
-        onSave(content) {
+        async onSave(content) {
             console.log(content);
-            Toast('save');
+            const { id, name, tel, province, city, county, addressDetail, isDefault ,areaCode} = content
+            // 将bool类型的isDefault转换
+            let handleisDefault = isDefault ? 1 : 0
+            // console.log(handleisDefault);
+            if (this.$route.query.type == 'update') {
+                let res = await updateAddress({ myname: name, detailedAddress: addressDetail, phoneNumber: tel, isDefault: handleisDefault, city, province, region: county, addressId: id , collectOrsend: this.$route.query.collectOrsend,code:areaCode})
+                if (res.code == 200) {
+                    Toast.success('修改成功');
+                    if (this.$route.query.from == 'addressBook') {
+                        this.$router.push('/addressBook')
+                    } else {
+                        this.$router.push({ path: '/receive', query: { role: this.$route.query.collectOrsend } })
+                    }
+                } else {
+                    Toast.fail('修改失败');
+                }
+            } else if (this.$route.query.type == 'add') {
+                let res = await addAddress({ myname: name, detailedAddress: addressDetail, phoneNumber: tel, isDefault: handleisDefault, city, province, region: county, collectOrsend: this.$route.query.collectOrsend,code:areaCode })
+                if (res.code == 200) {
+                    Toast.success('新增成功');
+                    if (this.$route.query.from == 'addressBook') {
+                        this.$router.push('/addressBook')
+                    } else {
+                        this.$router.push({ path: '/receive', query: { role: this.$route.query.collectOrsend } })
+                    }
+                } else {
+                    Toast.fail('新增失败');
+                }
+            } else {
+                // 克隆
+                let res = await addAddress({ myname: name, detailedAddress: addressDetail, phoneNumber: tel, isDefault: handleisDefault, city, province, region: county, collectOrsend: this.$route.query.collectOrsend,code:areaCode })
+                if (res.code == 200) {
+                    Toast.success('克隆成功');
+                    if (this.$route.query.from == 'addressBook') {
+                        this.$router.push('/addressBook')
+                    } else {
+                        this.$router.push({ path: '/receive', query: { role: this.$route.query.collectOrsend } })
+                    }
+                } else {
+                    Toast.fail('克隆失败');
+                }
+            }
+
+
         },
         onDelete() {
             Toast('delete');
@@ -77,15 +120,11 @@ export default {
                 this.searchResult = [];
             }
         },
-        selectAddress(val) {
-            localStorage.setItem('Eprovince',JSON.stringify(val[0].name))
-            localStorage.setItem('Ecity',JSON.stringify(val[1].name))
-            localStorage.setItem('Ecounty',JSON.stringify(val[2].name))
-            
-            console.log(111, val);
-        },
         changeArea(val) {
             console.log(val);
+            localStorage.setItem('Eprovince', JSON.stringify(val[0].name))
+            localStorage.setItem('Ecity', JSON.stringify(val[1].name))
+            localStorage.setItem('Ecounty', JSON.stringify(val[2].name))
         }
     },
 };

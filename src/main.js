@@ -20,7 +20,7 @@ Vue.component('Header',Header)
 // import 'vant/lib/index.less';
 
 // 自动按需引入组件，全局注册组件
-import { Slider ,Switch,Button,Tabbar, TabbarItem ,Swipe, SwipeItem ,Icon,Checkbox,Tab, Tabs,Search ,AddressEdit ,Area ,AddressList,ActionSheet ,Field,NumberKeyboard ,TreeSelect ,NavBar ,Form   } from 'vant';
+import { Slider ,Switch,Button,Tabbar, TabbarItem ,Swipe, SwipeItem ,Icon,Checkbox,Tab, Tabs,Search ,AddressEdit ,Area ,AddressList,ActionSheet ,Field,NumberKeyboard ,TreeSelect ,NavBar ,Form,Uploader  ,Toast  ,Divider  } from 'vant';
 
 Vue.use(Slider);
 Vue.use(Switch);
@@ -43,6 +43,9 @@ Vue.use(NumberKeyboard);
 Vue.use(TreeSelect);
 Vue.use(NavBar);
 Vue.use(Form);
+Vue.use(Uploader);
+Vue.use(Toast);
+Vue.use(Divider);
 
 // 百度地图
 import BaiduMap from 'vue-baidu-map'

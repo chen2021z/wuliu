@@ -6,54 +6,21 @@
             <div class="goodsNameList list">
                 <!-- <router-link to="/home">111111111111</router-link> -->
                 <!-- 这里用事件委托不好 -->
-                <div @click="selectName" :class="{ active: nameActive == '日用品' }">
+                <!-- <div @click="selectName" :class="{ active: nameActive == '日用品' }">
                     日用品
-                </div>
-                <div @click="selectName" :class="{ active: nameActive == '家用电器' }">
-                    家用电器
-                </div>
-                <div @click="selectName" :class="{ active: nameActive == '数码产品' }">
-                    数码产品
-                </div>
-                <div @click="selectName" :class="{ active: nameActive == '食品饮料' }">
-                    食品饮料
-                </div>
-                <div @click="selectName" :class="{ active: nameActive == '设备及材料' }">
-                    设备及材料
-                </div>
-                <div @click="selectName" :class="{ active: nameActive == '服装鞋帽' }">
-                    服装鞋帽
-                </div>
-                <div @click="selectName" :class="{ active: nameActive == '其他' }">
-                    其他
-                </div>
+                </div> -->
+
+                <div v-for="name,index in goodsNameList" :key="index"  @click="selectName" :class="{ active: nameActive == name }">{{ name }}</div>
             </div>
         </div>
 
         <div class="goodsPacks">
             <p>货物包装:</p>
             <div class="goodsPacksList list">
-                <div @click="selectPack" :class="{ active: packActive == '包装袋' }">
+                <!-- <div @click="selectPack" :class="{ active: packActive == '包装袋' }">
                     包装袋
-                </div>
-                <div @click="selectPack" :class="{ active: packActive == '裸妆' }">
-                    裸妆
-                </div>
-                <div @click="selectPack" :class="{ active: packActive == '膜' }">
-                    膜
-                </div>
-                <div @click="selectPack" :class="{ active: packActive == '木架' }">
-                    木架
-                </div>
-                <div @click="selectPack" :class="{ active: packActive == '纤袋' }">
-                    纤袋
-                </div>
-                <div @click="selectPack" :class="{ active: packActive == '信封' }">
-                    信封
-                </div>
-                <div @click="selectPack" :class="{ active: packActive == '纸箱' }">
-                    纸箱
-                </div>
+                </div> -->
+                <div v-for="name,index in goodsPackList" :key="index"  @click="selectPack" :class="{ active: packActive == name }">{{ name }}</div>
             </div>
         </div>
 
@@ -63,11 +30,9 @@
                 <!-- 件数 -->
                 <van-field v-model="num" maxlength="3" type="digit" label="件数" placeholder="0" />
                 <!-- 重量 -->
-                <van-field v-model="weight" maxlength="3" type="number" label="重量(公斤)" placeholder="0"
-                     />
+                <van-field v-model="weight" maxlength="3" type="number" label="重量(公斤)" placeholder="0" />
                 <!-- 体积 -->
-                <van-field v-model="volume" maxlength="3" type="number" label="体积(立方)" placeholder="0"
-                    />
+                <van-field v-model="volume" maxlength="3" type="number" label="体积(立方)" placeholder="0" />
             </div>
         </div>
 
@@ -93,29 +58,33 @@
 </template>
 
 <script>
+import { getGoodsNames, getGoodsPack } from '../../../api/goosInfo'
 import { Toast } from 'vant';
 
 export default {
     data() {
         return {
-            //数字键盘展示
-            show1: false,
-            show2: false,
-            show3: false,
             nameActive: '',
             packActive: '',
             num: '',
             weight: '',
             volume: '',
             remark: '',
-            value: ''
+            value: '',
+            goodsNameList: [],
+            goodsPackList: [],
         }
     },
     created() {
         this.initData()
     },
     methods: {
-        initData() {
+        async initData() {
+            let res1 = await getGoodsNames()
+            let res2 = await getGoodsPack()
+            res1.code==200? this.goodsNameList=res1.data:''
+            res2.code==200? this.goodsPackList=res2.data:''
+
             this.nameActive = JSON.parse(localStorage.getItem('nameActive'))
             this.packActive = JSON.parse(localStorage.getItem('packActive'))
             this.num = JSON.parse(localStorage.getItem('num'))

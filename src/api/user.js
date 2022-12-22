@@ -4,11 +4,10 @@ import requests from "../utils/request";
 export const reqRegister = (data) => requests({url:`/user/passport/register`,method:"post",data})
 
 // 登录  /api/user/passport/login  post
-export const reqLogin = (data) => requests({url:'user/passport/login',method:'post',data})
+export const reqLogin = (data) => requests({url:'/user/login',method:'post',data})
 
 //获取用户信息【需要带着用户的token向服务器要用户信息】
-//URL:/api/user/passport/auth/getUserInfo  method:get 
-export const reqUserInfo = ()=>requests({url:'/user/passport/auth/getUserInfo',method:'get'});
+export const reqUserInfo = ()=>requests({url:'/user/getUserInfo',method:'get'});
 
 //退出登录
 //URL:/api/user/passport/logout  get

@@ -3,11 +3,13 @@
         <Header><van-icon name="arrow-left" @click="$router.push('/home')" /> <span>地址簿</span></Header>
         <van-tabs v-model="activeName" line-width="50%">
             <van-tab title="发件人" name="sender">
-                <addressCard v-for="card in senderInfo" :key="card.id" :card="card" @click.native="selectCard(card)">
+                <addressCard v-for="card in senderInfo" :key="card.addressId" :card="card"
+                    @click.native="selectCard(card)">
                 </addressCard>
             </van-tab>
             <van-tab title="发货人" name="collecter">
-                <addressCard v-for="card in collecterInfo" :key="card.id" :card="card" @click.native="selectCard(card)">
+                <addressCard v-for="card in collecterInfo" :key="card.addressId" :card="card"
+                    @click.native="selectCard(card)">
                 </addressCard>
             </van-tab>
         </van-tabs>
@@ -22,6 +24,7 @@
 <script>
 import addressCard from '../../../components/addressCard.vue';
 import { Toast } from 'vant';
+import { getAddressList,deleteAddress } from '../../../api/address'
 export default {
     components: {
         addressCard
@@ -29,62 +32,39 @@ export default {
     data() {
         return {
             activeName: 'sender',
-            addressCards: [{
-                address_id: '0001',
-                user_id: '0002',
-                myname: '我的好兄弟1',
-                detailed_address: '福星东路0011号',
-                phone_number: '19974077529',
-                code: '010101',
-                collect_orsend: '1',
-                is_default: 'true',
-                city: '湘潭市',
-                province: '湖南省',
-                region: '岳塘区'
-            }, {
-                address_id: '0001',
-                user_id: '0002',
-                myname: '我的好兄弟2',
-                detailed_address: '福星东路0011号',
-                phone_number: '19974077529',
-                code: '010101',
-                collect_orsend: '1',
-                is_default: 'false',
-                city: '湘潭市',
-                province: '湖南省',
-                region: '岳塘区'
-            }, {
-                address_id: '0001',
-                user_id: '0002',
-                myname: '我的好兄弟3',
-                detailed_address: '福星东路0011号',
-                phone_number: '19974077529',
-                code: '010101',
-                collect_orsend: '2',
-                is_default: 'false',
-                city: '湘潭市',
-                province: '湖南省',
-                region: '岳塘区'
-            }],
+            addressCards: [],
             show: false,
             actions: [{ name: '编辑' }, { name: '删除' }, { name: '克隆' }],
             selectCardInfo: {}
         }
     },
+    created() {
+        this.initData()
+    },
     computed: {
         senderInfo() {
             return this.addressCards.filter(item => {
-                return item.collect_orsend == 1
+                return item.collectOrsend == 1
             })
         },
         collecterInfo() {
             return this.addressCards.filter(item => {
-                return item.collect_orsend == 2
+                return item.collectOrsend == 2
             })
         },
+        collectOrsend(){
+            return this.activeName=="sender"?1:2
+        }
 
     },
     methods: {
+        async initData() {
+            let res = await getAddressList()
+            console.log(res);
+            if (res.code == 200) {
+                this.addressCards = res.data
+            }
+        },
         onCancel() {
             // Toast('取消');
         },
@@ -92,28 +72,35 @@ export default {
             this.selectCardInfo = card
             this.show = true
         },
-        selectItem(action, index) {
-
-
-            localStorage.setItem("Eid", JSON.stringify(this.selectCardInfo.address_id))
+        async selectItem(action, index) {
+            localStorage.setItem("Eid", JSON.stringify(this.selectCardInfo.addressId))
             localStorage.setItem("Ename", JSON.stringify(this.selectCardInfo.myname))
-            localStorage.setItem("Etel", JSON.stringify(this.selectCardInfo.phone_number))
+            localStorage.setItem("Etel", JSON.stringify(this.selectCardInfo.phoneNumber))
             localStorage.setItem("Eprovince", JSON.stringify(this.selectCardInfo.province))
             localStorage.setItem("Ecity", JSON.stringify(this.selectCardInfo.city))
             localStorage.setItem("Ecounty", JSON.stringify(this.selectCardInfo.region))
-            localStorage.setItem("EaddressDetail", JSON.stringify(this.selectCardInfo.detailed_address))
-            localStorage.setItem("EisDefault", JSON.stringify(this.selectCardInfo.is_default))
+            localStorage.setItem("EaddressDetail", JSON.stringify(this.selectCardInfo.detailedAddress))
+            localStorage.setItem("EareaCode", JSON.stringify(this.selectCardInfo.code))
+            localStorage.setItem("EisDefault", JSON.stringify(this.selectCardInfo.isDefault))
             // console.log(action);
             if (action.name == '编辑') {
                 // params 只能配合 name 使用
-                this.$router.push({ name: 'newAddress' ,query:{from:'addressBook'}})
+                this.$router.push({ name: 'newAddress', query: { from: 'addressBook' ,type:'update'} })
             } else if (action.name == '删除') {
-
+                let res = await deleteAddress(this.selectCardInfo.addressId)
+                if(res.code == 200){
+                    Toast.success('删除成功');
+                    this.initData()
+                }else{
+                    Toast.fail('删除失败');
+                }
+            
             } else {
                 // 克隆
+                this.$router.push({ name: 'newAddress', query: { from: 'addressBook' ,type:'clone',collectOrsend:this.collectOrsend} })
             }
         },
-        addAddress(){
+        addAddress() {
             localStorage.setItem("Eid", JSON.stringify(''))
             localStorage.setItem("Ename", JSON.stringify(''))
             localStorage.setItem("Etel", JSON.stringify(''))
@@ -122,7 +109,8 @@ export default {
             localStorage.setItem("Ecounty", JSON.stringify(''))
             localStorage.setItem("EaddressDetail", JSON.stringify(''))
             localStorage.setItem("EisDefault", JSON.stringify(''))
-            this.$router.push({ name: 'newAddress' ,query:{from:'addressBook'}})
+            localStorage.setItem("EareaCode", JSON.stringify(''))
+            this.$router.push({ name: 'newAddress', query: { from: 'addressBook',type:'add' ,collectOrsend:this.collectOrsend} })
         }
 
     },

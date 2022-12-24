@@ -72,6 +72,10 @@ export default [
     name: 'editInfo',
     path: '/editInfo',
     component: () => import('@/pages/user/EditInfo/index'),
+  },{
+    name: 'orderInfo',
+    path: '/orderInfo',
+    component: () => import('@/pages/track/orderInfo'),
   },
 
 

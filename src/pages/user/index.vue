@@ -165,7 +165,7 @@ ul {
     text-align: center;
     font-size: 20px;
     color: rgb(132, 132, 132);
-    background-color: rgb(240, 240, 240);
+    background-color: rgb(255, 255, 255);
     border-radius: 5px;
 
 

@@ -196,13 +196,17 @@ export default {
         border-top: 2px solid rgb(209, 209, 209);
 
         ::v-deep .van-field__control {
-            background-color: rgb(240, 240, 240);
+            background-color: rgb(243, 243, 243);
             border-radius: 3px;
         }
     }
 
-    .textcon {
+     .textcon {
         border-top: 2px solid rgb(209, 209, 209);
+        ::v-deep .van-field__body{
+            background-color: rgb(239, 239, 239);
+
+        }
     }
 }
 

@@ -12,6 +12,7 @@ module.exports = {
       "/*": {
         target: "http://localhost:8888",
       },
+      
     },
   },
   css: {

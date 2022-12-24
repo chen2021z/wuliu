@@ -1,18 +1,18 @@
 <template>
     <div>
         <div class="box">
-            <p><span>订单编号:</span> {{ order.orderId }} <span>{{ status }}</span> </p>
-            <p><span>始发地:</span> {{ startPlace }}  </p>
-            <p><span>目的地:</span> {{ endPlace }} </p>
-            <p><span>收货人:</span> {{ collecter }}  </p>
-            <p><span>品名:</span> {{ goodsName }}  </p>
-            <p><span>货量:</span> {{ goodsNum }}件{{ goodsWeight }}公斤 {{ goodsVolume }}立方  </p>
-            <p><span>创建时间:</span> {{ createTime }}  </p>
+            <p><span>订单编号:</span> {{ order.orderId }} <span>{{ order.orderStatus }}</span> </p>
+            <p class="van-ellipsis"><span>始发地:</span> {{ order.province1 }}{{ order.city1 }}{{ order.region1 }}{{ order.detailedAddress1 }}</p>
+            <p class="van-ellipsis"><span>目的地:</span> {{ order.province2 }}{{ order.city2 }}{{ order.region2 }}{{ order.detailedAddress2 }}</p>
+            <p><span>品名:</span> {{ order.myname2 }}  </p>
+            <p><span>货量:</span> {{ order.num }}件{{ order.weigth }}公斤 {{ order.volume }}立方  </p>
+            <p><span>创建时间:</span> {{ time }}  </p>
         </div>
     </div>
 </template>
 
 <script>
+
 export default {
     props:["order"],
     data() {
@@ -52,6 +52,10 @@ export default {
 
             }
 
+        },
+        time(){
+            return  this.order.createOrderTime.split('.')[0].split('T').join(" ")
+            
         }
     }
 }
@@ -60,7 +64,7 @@ export default {
 <style lang="less" scoped>
 .box{
     margin-top: 5px;
-    background-color: rgb(244, 244, 244);
+    background-color: rgb(255, 255, 255);
     padding: 10px;
     p{
         font-size: 15px;

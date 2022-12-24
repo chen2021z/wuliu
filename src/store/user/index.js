@@ -50,7 +50,7 @@ const actions = {
   // 通过token返回用户信息
   async getUserInfo({commit}){
     let result = await reqUserInfo()
-    console.log(result);
+    // console.log(result);
     if (result.code == 200) {
       commit("GETUSERINFO",result.data)
       return 'ok'
